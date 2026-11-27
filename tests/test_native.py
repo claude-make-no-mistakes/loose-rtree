@@ -1,4 +1,3 @@
-import ctypes
 import json
 from pathlib import Path
 import random
@@ -6,27 +5,8 @@ import subprocess
 from tempfile import TemporaryDirectory
 import unittest
 
-import numpy as np
-
 from benchmarks.common import BIN
 from benchmarks.spatial import make_trace
-
-
-def symbolic_fill(a, ordering):
-    graph = [set(np.flatnonzero(row)) - {i} for i, row in enumerate(a)]
-    nnz, operations = 0, 0
-    for pivot in ordering:
-        remaining = graph[pivot]
-        length = len(remaining) + 1
-        nnz += length
-        operations += length ** 2
-        for vertex in remaining:
-            graph[vertex].update(remaining - {vertex})
-            graph[vertex].discard(pivot)
-        graph[pivot] = set()
-    return nnz, operations
-
-
 
 
 @unittest.skipUnless((BIN / "rtree.exe").is_file(), "build the tree with python -m benchmarks.build spatial")
